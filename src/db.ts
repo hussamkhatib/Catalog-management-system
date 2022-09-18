@@ -1,7 +1,8 @@
 import Dexie, { Table } from "dexie";
 
-export interface Product {
+interface Product {
   id?: number;
+
   title: string;
   category: string;
   subCategory: string;
