@@ -2,8 +2,9 @@ import { AgGridReact } from "ag-grid-react";
 
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
+import "ag-grid-enterprise";
 
-import { useRef, useCallback, useEffect, useState } from "react";
+import { useRef, useCallback, useEffect, useState, useMemo } from "react";
 import Button from "../Button";
 import db from "../../db";
 import { useAtom } from "jotai";
@@ -68,6 +69,16 @@ const Products = () => {
     db.products.update(id, { [field]: payload.newValue });
   };
 
+  const defaultColDef = useMemo(
+    () => ({
+      // allow every column to be aggregated
+      enableValue: true,
+      // allow every column to be grouped
+      enableRowGroup: true,
+      // allow every column to be pivoted
+    }),
+    []
+  );
   //FIXME
   if (!rowData) return null;
 
@@ -91,8 +102,10 @@ const Products = () => {
         rowSelection="multiple"
         rowData={rowData}
         animateRows={true}
+        defaultColDef={defaultColDef}
         columnDefs={columns()}
         onCellValueChanged={onCellEditingStopped}
+        sideBar={true}
         // onCellEditingStopped={onCellEditingStopped}
       />
     </div>

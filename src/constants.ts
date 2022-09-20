@@ -27,15 +27,21 @@ const columnDefs = (category: keyof typeof categories) => [
   {
     headerCheckboxSelection: true,
     checkboxSelection: true,
+    suppressColumnsToolPanel: true,
     width: 50,
   },
   {
     field: "title",
     editable: true,
+    filter: true,
+    sortable: true,
   },
   {
     field: "price",
     editable: true,
+    valueParser: ({ newValue }: any) => Number(newValue),
+    filter: "agNumberColumnFilter",
+    sortable: true,
   },
   {
     field: "subCategory",
@@ -46,6 +52,8 @@ const columnDefs = (category: keyof typeof categories) => [
       values: categories[category],
     },
     editable: true,
+    filter: true,
+    sortable: true,
   },
 ];
 
