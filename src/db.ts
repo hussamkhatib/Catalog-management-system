@@ -1,4 +1,5 @@
-import Dexie, { Table } from "dexie";
+import Dexie, { Table, Transaction } from "dexie";
+import products from "./seed";
 
 interface Product {
   id?: number;
@@ -22,4 +23,7 @@ export class MySubClassedDexie extends Dexie {
 }
 
 const db = new MySubClassedDexie();
+db.on("populate", function (transaction: Transaction) {
+  transaction.table("products").bulkAdd(products);
+});
 export default db;

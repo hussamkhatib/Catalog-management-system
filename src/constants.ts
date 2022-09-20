@@ -9,11 +9,12 @@ const categories = {
 const subCategoryStyles: any = {
   Vegetables: "bg-green-200",
   Fruits: "bg-red-200",
+  Exotics: "bg-yellow-200",
   "Frozen Veg": "bg-blue-200",
   Milk: "bg-yellow-200",
   Bread: "bg-indigo-200",
   Eggs: "bg-purple-200",
-  Chips: "bg-pink-200",
+  "Chips & Crisps": "bg-pink-200",
   Nachos: "bg-gray-200",
 };
 
