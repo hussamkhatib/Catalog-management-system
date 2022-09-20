@@ -13,8 +13,11 @@ import { columnDefs } from "../../constants";
 const Products = () => {
   const [activeTab] = useAtom(activeTabAtom);
   const gridRef = useRef<any>();
-  console.log(activeTab);
   const [rowData, setRowData] = useState<any>(null);
+
+  const columns = useCallback(() => {
+    return columnDefs(activeTab);
+  }, [activeTab]);
 
   useEffect(() => {
     db.products
@@ -45,6 +48,7 @@ const Products = () => {
       db.products.delete(data.id);
       return data;
     });
+
     gridRef.current.api.applyTransaction({
       remove: selectedData,
     });
@@ -74,7 +78,7 @@ const Products = () => {
         rowSelection="multiple"
         rowData={rowData}
         animateRows={true}
-        columnDefs={columnDefs}
+        columnDefs={columns()}
         onCellValueChanged={onCellEditingStopped}
         // onCellEditingStopped={onCellEditingStopped}
       />
