@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { useAtom } from "jotai";
 import { FC } from "react";
-import activeTabAtom from "../../atom";
+import { activeTabAtom } from "../../atom";
 
 type Props = {
   children: string;

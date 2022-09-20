@@ -1,15 +1,29 @@
-import NumericCellEditor from "./components/Products/NumericCellEditor";
+import SubCategoryCellRenderer from "./components/Products/SubCategoryCellRenderer";
 
-const categories = new Map();
+const categories = {
+  "Vegetables & Fruits": ["Vegetables", "Fruits", "Frozen Veg"],
+  "Dairy, Bread & eggs": ["Milk", "Bread", "Eggs"],
+  Munchies: ["Chips", "Nachos"],
+};
 
-categories.set("Vegetables & Fruits", ["Vegetables", "Fruits", "Frozen Veg"]);
-categories.set("Dairy, Bread & eggs", ["Milk", "Bread", "Eggs"]);
-categories.set("Munchies", ["Chips & Crips", "Nachos"]);
+const subCategoryStyles: any = {
+  Vegetables: "bg-green-200",
+  Fruits: "bg-red-200",
+  "Frozen Veg": "bg-blue-200",
+  Milk: "bg-yellow-200",
+  Bread: "bg-indigo-200",
+  Eggs: "bg-purple-200",
+  Chips: "bg-pink-200",
+  Nachos: "bg-gray-200",
+};
 
-const categoryArr = [...categories.keys()];
-const getSubCategory = (category: string) => categories.get(category);
+const categoryArr: any = [
+  "Vegetables & Fruits",
+  "Dairy, Bread & eggs",
+  "Munchies",
+];
 
-const columnDefs = (category: any) => [
+const columnDefs = (category: keyof typeof categories) => [
   {
     headerCheckboxSelection: true,
     checkboxSelection: true,
@@ -21,24 +35,19 @@ const columnDefs = (category: any) => [
   },
   {
     field: "price",
-    sorting: true,
     editable: true,
-    cellRenderer: NumericCellEditor,
-    valueParser: (params: any) => Number(params.newValue),
   },
   {
     field: "subCategory",
     cellEditor: "agSelectCellEditor",
-
-    cellEditorParams: (params: any) => {
-      console.log({ params });
-      return {
-        values: categories.get(category),
-      };
+    cellRenderer: SubCategoryCellRenderer,
+    cellEditorParams: {
+      cellRenderer: SubCategoryCellRenderer,
+      values: categories[category],
     },
     editable: true,
   },
 ];
 
-export { categoryArr, getSubCategory, columnDefs };
+export { categoryArr, subCategoryStyles, columnDefs };
 export default categories;

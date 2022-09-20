@@ -3,11 +3,11 @@ import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 
-import { useRef, useCallback, useId, useEffect, useState } from "react";
+import { useRef, useCallback, useEffect, useState } from "react";
 import Button from "../Button";
 import db from "../../db";
 import { useAtom } from "jotai";
-import activeTabAtom from "../../atom";
+import { activeTabAtom } from "../../atom";
 import { columnDefs } from "../../constants";
 
 const Products = () => {
@@ -34,13 +34,18 @@ const Products = () => {
   }, []);
 
   const onTxInsertOne = useCallback(async () => {
-    const product = createOneProductRecord();
-    const id = await db.products.add({ ...product, category: activeTab });
+    const product = {
+      title: "",
+      price: null,
+      category: activeTab,
+      subCategory: "",
+    };
+    const id = await db.products.add(product);
     const newRecord = { id, ...product };
     gridRef.current.api.applyTransaction({
       add: [newRecord],
     });
-  }, []);
+  }, [activeTab]);
 
   const onTxRemove = useCallback(() => {
     const selectedNodes = gridRef.current.api.getSelectedNodes();
@@ -59,16 +64,24 @@ const Products = () => {
       data: { id },
       colDef: { field },
     } = payload;
+
     db.products.update(id, { [field]: payload.newValue });
   };
 
   //FIXME
   if (!rowData) return null;
+
   return (
     <div className="ag-theme-alpine  w-full h-full" style={{ height: "100%" }}>
       <div className="flex gap-x-2 px-2.5 py-1.5">
         <Button onClick={onTxInsertOne}>Add Product</Button>
-        <Button onClick={onTxRemove}>Remove Product</Button>
+        <Button
+          // TODO
+          // disabled={!gridRef.current.api.getSelectedNodes().length}
+          onClick={onTxRemove}
+        >
+          Remove Product
+        </Button>
       </div>
 
       <AgGridReact
@@ -87,11 +100,3 @@ const Products = () => {
 };
 
 export default Products;
-
-function createOneProductRecord() {
-  return {
-    title: "",
-    price: null,
-    subCategory: "",
-  };
-}
