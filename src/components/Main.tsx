@@ -1,10 +1,12 @@
 import Categories from "./Categories";
-import { categoryArr } from "../category";
+import { categoryArr } from "../constants";
+import Products from "./Products/Products";
 
 const Main = () => {
   return (
-    <div className="grid grid-cols-[6rem_1fr]">
+    <div className="grid grid-rows-[auto_1fr] h-screen">
       <Categories categories={categoryArr} />
+      <Products />
     </div>
   );
 };

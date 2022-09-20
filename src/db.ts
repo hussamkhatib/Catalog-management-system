@@ -2,10 +2,10 @@ import Dexie, { Table } from "dexie";
 
 interface Product {
   id?: number;
-
   title: string;
   category: string;
   subCategory: string;
+  price: null;
 }
 
 export class MySubClassedDexie extends Dexie {
@@ -14,9 +14,9 @@ export class MySubClassedDexie extends Dexie {
   products!: Table<Product>;
 
   constructor() {
-    super("myDatabase");
+    super("catalog-management-system-db");
     this.version(1).stores({
-      products: "++id, title,category,subCategory",
+      products: "++id, title, price,category, subCategory",
     });
   }
 }
