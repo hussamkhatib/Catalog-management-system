@@ -49,12 +49,15 @@ const Products = () => {
     if (gridRef.current)
       gridRef.current.api.applyTransaction({
         add: [newRecord],
+        addIndex: 0,
       });
   }, [activeTab]);
 
   const onTxRemove = useCallback(() => {
     if (gridRef.current) {
       const selectedNodes = gridRef.current.api.getSelectedNodes();
+      // @NOTE: alert is not a good way to handle this, but it's just a demo.
+      if (!selectedNodes.length) alert("No rows selected");
       const selectedData = selectedNodes.map(({ data }: RowNode) => {
         db.products.delete(data.id);
         return data;
@@ -84,24 +87,12 @@ const Products = () => {
     }),
     []
   );
-  //FIXME
-  if (!rowData) return null;
-
-  // const onGridReady = useCallback(()=>{
-
-  // },[])
 
   return (
     <div className="ag-theme-alpine w-full h-full">
       <div className="flex gap-x-2 px-2.5 py-1.5">
         <Button onClick={onTxInsertOne}>Add Product</Button>
-        <Button
-          // TODO
-          // disabled={!gridRef.current.api.getSelectedNodes().length}
-          onClick={onTxRemove}
-        >
-          Remove Product
-        </Button>
+        <Button onClick={onTxRemove}>Remove Product</Button>
       </div>
 
       <AgGridReact
@@ -114,8 +105,6 @@ const Products = () => {
         columnDefs={columns()}
         onCellValueChanged={onCellEditingStopped}
         sideBar={true}
-
-        // onGridReady={onGridReady}
       />
     </div>
   );

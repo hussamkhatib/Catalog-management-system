@@ -1,4 +1,5 @@
 import { ComponentMeta } from "@storybook/react";
+import { categoryArr } from "../../constants";
 
 import Category from "./Category";
 export default {
@@ -6,4 +7,4 @@ export default {
   component: Category,
 } as ComponentMeta<typeof Category>;
 
-export const Default = () => <Category>The tab</Category>;
+export const Default = () => <Category>{categoryArr[0]}</Category>;

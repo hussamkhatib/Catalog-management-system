@@ -2,10 +2,10 @@ import classNames from "classnames";
 import { useAtom } from "jotai";
 import { FC } from "react";
 import { activeTabAtom } from "../../atom";
-import { Category } from "../../constants";
+import { Category as CategoryType } from "../../constants";
 
 type Props = {
-  children: Category;
+  children: CategoryType;
 };
 
 const Category: FC<Props> = ({ children }) => {
