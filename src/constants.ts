@@ -1,21 +1,28 @@
 import SubCategoryCellRenderer from "./components/Products/SubCategoryCellRenderer";
 
 const categories = {
-  "Vegetables & Fruits": ["Vegetables", "Fruits", "Frozen Veg"],
+  "Vegetables & Fruits": [
+    "Vegetables",
+    "Fruits",
+    "Flowers & Leaves",
+    "Frozen Veg",
+  ],
   "Dairy, Bread & eggs": ["Milk", "Bread", "Eggs"],
-  Munchies: ["Chips", "Nachos"],
+  Munchies: ["Chips & Crisps", "Nachos", "Popcorn"],
 };
 
 const subCategoryStyles: any = {
   Vegetables: "bg-green-200",
   Fruits: "bg-red-200",
   Exotics: "bg-yellow-200",
+  "Flowers & Leaves": "bg-purple-200",
   "Frozen Veg": "bg-blue-200",
   Milk: "bg-yellow-200",
   Bread: "bg-indigo-200",
   Eggs: "bg-purple-200",
   "Chips & Crisps": "bg-pink-200",
   Nachos: "bg-gray-200",
+  Popcorn: "bg-green-200",
 };
 
 const categoryArr: any = [
@@ -32,17 +39,25 @@ const columnDefs = (category: keyof typeof categories) => [
     width: 50,
   },
   {
-    field: "title",
-    editable: true,
+    field: "name",
     filter: true,
     sortable: true,
+    resizable: true,
+    minWidth: 300,
   },
   {
     field: "price",
-    editable: true,
     valueParser: ({ newValue }: any) => Number(newValue),
     filter: "agNumberColumnFilter",
     sortable: true,
+    width: 100,
+  },
+  {
+    field: "oldPrice",
+    valueParser: ({ newValue }: any) => Number(newValue),
+    filter: "agNumberColumnFilter",
+    sortable: true,
+    width: 120,
   },
   {
     field: "subCategory",
@@ -52,9 +67,16 @@ const columnDefs = (category: keyof typeof categories) => [
       cellRenderer: SubCategoryCellRenderer,
       values: categories[category],
     },
-    editable: true,
     filter: true,
     sortable: true,
+  },
+  {
+    field: "description",
+    filter: true,
+    sortable: true,
+    flex: 1,
+    resizable: true,
+    minWidth: 500,
   },
 ];
 

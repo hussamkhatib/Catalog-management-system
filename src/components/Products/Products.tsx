@@ -36,7 +36,7 @@ const Products = () => {
 
   const onTxInsertOne = useCallback(async () => {
     const product = {
-      title: "",
+      name: "",
       price: null,
       category: activeTab,
       subCategory: "",
@@ -71,6 +71,7 @@ const Products = () => {
 
   const defaultColDef = useMemo(
     () => ({
+      editable: true,
       // allow every column to be aggregated
       enableValue: true,
       // allow every column to be grouped
@@ -83,7 +84,7 @@ const Products = () => {
   if (!rowData) return null;
 
   return (
-    <div className="ag-theme-alpine  w-full h-full" style={{ height: "100%" }}>
+    <div className="ag-theme-alpine w-full h-full overflow-y-hidden">
       <div className="flex gap-x-2 px-2.5 py-1.5">
         <Button onClick={onTxInsertOne}>Add Product</Button>
         <Button

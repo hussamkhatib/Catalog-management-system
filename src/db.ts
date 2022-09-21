@@ -3,10 +3,7 @@ import products from "./seed";
 
 interface Product {
   id?: number;
-  title: string;
   category: string;
-  subCategory: string;
-  price: null;
 }
 
 export class MySubClassedDexie extends Dexie {
@@ -17,7 +14,7 @@ export class MySubClassedDexie extends Dexie {
   constructor() {
     super("catalog-management-system-db");
     this.version(1).stores({
-      products: "++id, title, price,category, subCategory",
+      products: "++id,category",
     });
   }
 }
