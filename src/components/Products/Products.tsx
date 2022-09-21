@@ -10,11 +10,14 @@ import db from "../../db";
 import { useAtom } from "jotai";
 import { activeTabAtom } from "../../atom";
 import { columnDefs } from "../../constants";
+import { GetRowIdParams, RowNode } from "ag-grid-enterprise";
+import { CellEditingStoppedEvent } from "ag-grid-community";
+import { Product } from "../../seed";
 
 const Products = () => {
   const [activeTab] = useAtom(activeTabAtom);
-  const gridRef = useRef<any>();
-  const [rowData, setRowData] = useState<any>(null);
+  const gridRef = useRef<AgGridReact>(null);
+  const [rowData, setRowData] = useState<Product[]>([]);
 
   const columns = useCallback(() => {
     return columnDefs(activeTab);
@@ -30,7 +33,7 @@ const Products = () => {
       });
   }, [activeTab]);
 
-  const getRowId = useCallback((params: any) => {
+  const getRowId = useCallback((params: GetRowIdParams) => {
     return params.data.id;
   }, []);
 
@@ -43,30 +46,32 @@ const Products = () => {
     };
     const id = await db.products.add(product);
     const newRecord = { id, ...product };
-    gridRef.current.api.applyTransaction({
-      add: [newRecord],
-    });
+    if (gridRef.current)
+      gridRef.current.api.applyTransaction({
+        add: [newRecord],
+      });
   }, [activeTab]);
 
   const onTxRemove = useCallback(() => {
-    const selectedNodes = gridRef.current.api.getSelectedNodes();
-    const selectedData = selectedNodes.map(({ data }: any) => {
-      db.products.delete(data.id);
-      return data;
-    });
+    if (gridRef.current) {
+      const selectedNodes = gridRef.current.api.getSelectedNodes();
+      const selectedData = selectedNodes.map(({ data }: RowNode) => {
+        db.products.delete(data.id);
+        return data;
+      });
 
-    gridRef.current.api.applyTransaction({
-      remove: selectedData,
-    });
+      gridRef.current.api.applyTransaction({
+        remove: selectedData,
+      });
+    }
   }, []);
 
-  const onCellEditingStopped = (payload: any) => {
+  const onCellEditingStopped = (payload: CellEditingStoppedEvent) => {
     const {
       data: { id },
       colDef: { field },
     } = payload;
-
-    db.products.update(id, { [field]: payload.newValue });
+    if (field) db.products.update(id, { [field]: payload.newValue });
   };
 
   const defaultColDef = useMemo(
@@ -76,15 +81,18 @@ const Products = () => {
       enableValue: true,
       // allow every column to be grouped
       enableRowGroup: true,
-      // allow every column to be pivoted
     }),
     []
   );
   //FIXME
   if (!rowData) return null;
 
+  // const onGridReady = useCallback(()=>{
+
+  // },[])
+
   return (
-    <div className="ag-theme-alpine w-full h-full overflow-y-hidden">
+    <div className="ag-theme-alpine w-full h-full">
       <div className="flex gap-x-2 px-2.5 py-1.5">
         <Button onClick={onTxInsertOne}>Add Product</Button>
         <Button
@@ -97,7 +105,6 @@ const Products = () => {
       </div>
 
       <AgGridReact
-        // enableCellChangeFlash={true}
         ref={gridRef}
         getRowId={getRowId}
         rowSelection="multiple"
@@ -107,7 +114,8 @@ const Products = () => {
         columnDefs={columns()}
         onCellValueChanged={onCellEditingStopped}
         sideBar={true}
-        // onCellEditingStopped={onCellEditingStopped}
+
+        // onGridReady={onGridReady}
       />
     </div>
   );

@@ -1,3 +1,4 @@
+import { ValueParserParams } from "ag-grid-community";
 import SubCategoryCellRenderer from "./components/Products/SubCategoryCellRenderer";
 
 const categories = {
@@ -11,7 +12,7 @@ const categories = {
   Munchies: ["Chips & Crisps", "Nachos", "Popcorn"],
 };
 
-const subCategoryStyles: any = {
+const subCategoryStyles = {
   Vegetables: "bg-green-200",
   Fruits: "bg-red-200",
   Exotics: "bg-yellow-200",
@@ -25,13 +26,12 @@ const subCategoryStyles: any = {
   Popcorn: "bg-green-200",
 };
 
-const categoryArr: any = [
-  "Vegetables & Fruits",
-  "Dairy, Bread & eggs",
-  "Munchies",
-];
+const categoryArr = Object.keys(categories) as (keyof typeof categories)[];
 
-const columnDefs = (category: keyof typeof categories) => [
+export type CategoryArr = typeof categoryArr;
+export type Category = keyof typeof categories;
+
+const columnDefs = (category: Category) => [
   {
     headerCheckboxSelection: true,
     checkboxSelection: true,
@@ -47,14 +47,14 @@ const columnDefs = (category: keyof typeof categories) => [
   },
   {
     field: "price",
-    valueParser: ({ newValue }: any) => Number(newValue),
+    valueParser: ({ newValue }: ValueParserParams) => Number(newValue),
     filter: "agNumberColumnFilter",
     sortable: true,
     width: 100,
   },
   {
     field: "oldPrice",
-    valueParser: ({ newValue }: any) => Number(newValue),
+    valueParser: ({ newValue }: ValueParserParams) => Number(newValue),
     filter: "agNumberColumnFilter",
     sortable: true,
     width: 120,
